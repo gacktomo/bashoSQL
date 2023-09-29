@@ -16,7 +16,7 @@ export default function TablePage() {
     );
   }
   return (
-    <main className="flex min-h-screen flex-col p-8">
+    <>
       <h2 className="text-4xl font-bold mb-4">{table?.name}</h2>
       <h2 className="text-xl font-bold mb-2">Schema</h2>
       <div className="border-neutral-50 w-full border-2 p-2 mb-6">
@@ -38,6 +38,6 @@ export default function TablePage() {
           </div>
         ))}
       </div>
-    </main>
+    </>
   );
 }

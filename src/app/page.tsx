@@ -30,7 +30,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="flex min-h-screen flex-col p-8">
+    <>
       <h2 className="text-3xl font-bold mb-4">Tables</h2>
       {!tables.length ? (
         <div className="">
@@ -58,6 +58,6 @@ export default function Home() {
           ))}
         </div>
       )}
-    </main>
+    </>
   );
 }
