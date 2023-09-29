@@ -1,39 +1,33 @@
 "use client";
-import { tablesAtom } from "@/state/atoms";
+import { DB } from "@/db";
 import Link from "next/link";
-import { useCallback } from "react";
-import { useRecoilState } from "recoil";
+import { useCallback, useState } from "react";
 
 export default function Home() {
-  const [tables, setTables] = useRecoilState(tablesAtom);
+  const [tables, setTables] = useState<TableSchema[]>(new DB().showTables());
 
   const createSample = useCallback(() => {
-    const tableSamples = [
-      {
-        name: "users",
-        columns: [
-          { name: "id", type: "int" },
-          { name: "name", type: "string" },
-        ],
-        data: [
-          { id: 1, name: "John" },
-          { id: 2, name: "Jane" },
-        ],
-      },
-      {
-        name: "posts",
-        columns: [
-          { name: "id", type: "int" },
-          { name: "title", type: "string" },
-        ],
-        data: [
-          { id: 1, title: "Hello" },
-          { id: 2, title: "World" },
-        ],
-      },
-    ];
-    setTables(tableSamples);
-  }, [setTables]);
+    const db = new DB();
+    db.createTable("users", [
+      { name: "id", type: "int" },
+      { name: "name", type: "string" },
+    ]);
+    db.createTable("posts", [
+      { name: "id", type: "int" },
+      { name: "title", type: "string" },
+    ]);
+    db.insert(
+      "users",
+      Array(1000)
+        .fill(null)
+        .map((_, i) => ({ id: i + 1, name: "John" }))
+    );
+    db.insert("posts", [
+      { id: 1, title: "Hello" },
+      { id: 2, title: "World" },
+    ]);
+    setTables([...db.showTables()]);
+  }, []);
 
   return (
     <main className="flex min-h-screen flex-col p-8">

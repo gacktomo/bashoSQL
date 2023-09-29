@@ -1,17 +1,12 @@
 "use client";
-import { tablesAtom } from "@/state/atoms";
+import { DB } from "@/db";
 import { useSearchParams } from "next/navigation";
-import { useMemo } from "react";
-import { useRecoilState } from "recoil";
+import { useState } from "react";
 
 export default function TablePage() {
   const searchParams = useSearchParams();
-  const search = searchParams.get("name");
-  const [tables, setTables] = useRecoilState(tablesAtom);
-  const table = useMemo(
-    () => tables.find((table) => table.name === search),
-    [tables, search]
-  );
+  const tableName = searchParams.get("name") ?? "";
+  const [table] = useState(new DB().select(tableName));
 
   if (!table) {
     return (
@@ -35,8 +30,8 @@ export default function TablePage() {
       <div className="border-neutral-50 w-full border-2 p-2">
         {table.data.map((row) => (
           <div key={row.id} className="flex">
-            {Object.values(row).map((val) => (
-              <div key={row.id} className="mr-2 text-lg">
+            {Object.entries(row).map(([col, val]) => (
+              <div key={col} className="mr-2 text-lg">
                 {val}
               </div>
             ))}
